@@ -10,8 +10,15 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { loginThunk } from "../(redux)/authSlice";
+import { useDispatch } from "react-redux";
+import { SUCCESS } from "../(constant)/constants";
+import { useRouter } from "expo-router/build/exports";
 
 const login = () => {
+  const dispatch = useDispatch();
+  const router = useRouter();
+
   const schema = yup
     .object({
       username: yup
@@ -21,7 +28,7 @@ const login = () => {
       password: yup
         .string()
         .required("Password is required")
-        .min(6, "Password must be at least 6 characters"),
+        .min(3, "Password must be at least 6 characters"),
     })
     .required();
 
@@ -37,8 +44,17 @@ const login = () => {
     },
   });
 
-  const onSubmit = (data) => {
-    Alert.alert("Registration Success", `Welcome, ${data.username}!`);
+  const onSubmit = ({ username, password }) => {
+    const detail = {
+      username: username,
+      password: password,
+    };
+    dispatch(loginThunk(detail)).then((data) => {
+      if (data?.payload?.type === SUCCESS) {
+        Alert.alert("Registration Success", `Welcome, ${data.username}!`);
+        router.push("(tabs)");
+      }
+    });
   };
   return (
     <View style={styles.container}>

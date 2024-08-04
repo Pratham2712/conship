@@ -51,22 +51,18 @@ const reg = () => {
     };
 
     dispatch(checkUsernameThunk({ data: username.trim() })).then((data) => {
-      dispatch(checkUsernameThunk({ data: username.trim() })).then((data) => {
-        if (data.payload.data === false) {
-          dispatch(registerThunk(detail)).then((data) => {
-            if (data.payload.type === SUCCESS) {
-              router.push("/(tabs)");
-              Alert.alert("Registration Success", `Welcome, ${data.username}!`);
-            }
-          });
-          setLoginOpen(false);
-        } else {
-          setError("username", {
-            type: "manual",
-            message: "Username is already taken",
-          });
-        }
-      });
+      if (data.payload.data === false) {
+        dispatch(registerThunk(detail)).then((data) => {
+          if (data.payload.type === SUCCESS) {
+            //router.push("/auth/login");
+          }
+        });
+      } else {
+        setError("username", {
+          type: "manual",
+          message: "Username is already taken",
+        });
+      }
     });
   };
   return (

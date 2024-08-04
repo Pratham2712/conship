@@ -1,6 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { BASE_URL, ERROR, IDLE } from "../(constant)/constants";
+import {
+  BASE_URL,
+  ERROR,
+  FAILURE,
+  FULFILLED,
+  IDLE,
+  SUCCESS,
+} from "../(constant)/constants";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 axios.defaults.withCredentials = true;
 
@@ -9,8 +17,6 @@ export const checkUsernameThunk = createAsyncThunk(
   async (data) => {
     try {
       const res = await axios.post(`${BASE_URL}/auth/checkUser`, data);
-      console.log("slice", res);
-
       return res.data;
     } catch (error) {
       return error.response.data;
@@ -26,6 +32,33 @@ export const registerThunk = createAsyncThunk("auth/register", async (data) => {
     return error.response.data;
   }
 });
+
+export const loginThunk = createAsyncThunk("auth/login", async (data) => {
+  try {
+    const res = await axios.post(`${BASE_URL}/auth/login`, data);
+    if (res) {
+      console.log(res);
+
+      await AsyncStorage.setItem("token", res.token);
+      await AsyncStorage.setItem("username", res.data.data[0].username);
+    }
+    return res.data;
+  } catch (error) {
+    return error.response.data;
+  }
+});
+
+export const checkUserLoginThunk = createAsyncThunk(
+  "/auth/token_login",
+  async () => {
+    try {
+      const res = await axios.post(`${BASE_URL}/auth/token_login`, data);
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+);
 
 const initialState = {
   loading: false,
@@ -48,6 +81,7 @@ const initialState = {
   status: {
     registerThunk: IDLE,
     checkUsernameThunk: IDLE,
+    checkUserLoginThunk: IDLE,
   },
 };
 
@@ -126,6 +160,65 @@ const authSlice = createSlice({
       })
       .addCase(registerThunk.rejected, (state, action) => {
         state.status.registerThunk = ERROR;
+        state.loading = false;
+        state.errorData = action.error.message;
+      })
+      //loginThunk===============================================================================================
+      .addCase(loginThunk.pending, (state, { payload }) => {
+        state.loading = true;
+      })
+      .addCase(loginThunk.fulfilled, (state, { payload }) => {
+        switch (payload.type) {
+          case SUCCESS:
+            state.data.userInfo = payload.data[0];
+            state.loading = false;
+            state.isLogin = true;
+            state.token = payload.token;
+            state.status.loginThunk = FULFILLED;
+            break;
+          default:
+            state.isLogin = false;
+            state.loading = false;
+            state.isError = true;
+            state.errorData = {
+              message: payload.message,
+              type: payload.type,
+              errors: payload.errors,
+            };
+            break;
+        }
+      })
+      .addCase(loginThunk.rejected, (state, action) => {
+        state.status.loginThunk = ERROR;
+        state.loading = false;
+        state.errorData = action.error.message;
+      })
+      //checkUserLoginThunk===============================================================================================
+      .addCase(checkUserLoginThunk.pending, (state, { payload }) => {
+        state.loading = true;
+      })
+      .addCase(checkUserLoginThunk.fulfilled, (state, { payload }) => {
+        switch (payload.type) {
+          case SUCCESS:
+            state.data.userInfo = payload.data;
+
+            state.loading = false;
+            state.isLogin = true;
+            state.updateDone = !state.updateDone;
+            state.status.checkUserLoginThunk = FULFILLED;
+            break;
+          default:
+            state.isLogin = false;
+            state.loading = false;
+            state.errorData = {
+              type: payload.type,
+              errors: payload.errors,
+            };
+            break;
+        }
+      })
+      .addCase(checkUserLoginThunk.rejected, (state, action) => {
+        state.status.checkUserLoginThunk = ERROR;
         state.loading = false;
         state.errorData = action.error.message;
       });

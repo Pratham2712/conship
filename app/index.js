@@ -1,10 +1,29 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import icon from "../assets/icon-image.png";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router/build/hooks";
+import { useDispatch } from "react-redux";
+import { checkUserLoginThunk } from "./(redux)/authSlice";
 
 const Home = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem("token");
+        if (token) {
+          dispatch(checkUserLoginThunk({ token: token }));
+          router.push("(tabs)");
+        }
+      } catch (error) {
+        console.error("Error checking token:", error);
+      }
+    };
+
+    checkToken();
+  }, []);
   return (
     <View>
       <View style={styles.container}>
