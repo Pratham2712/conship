@@ -31,6 +31,10 @@ const login = () => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
+    defaultValues: {
+      username: "",
+      password: "",
+    },
   });
 
   const onSubmit = (data) => {

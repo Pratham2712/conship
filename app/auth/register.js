@@ -11,9 +11,13 @@ import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "expo-router/build/hooks";
+import { checkUsernameThunk, registerThunk } from "../(redux)/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { SUCCESS } from "../(constant)/constants";
 
 const reg = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const schema = yup
     .object({
       username: yup
@@ -23,21 +27,47 @@ const reg = () => {
       password: yup
         .string()
         .required("Password is required")
-        .min(6, "Password must be at least 6 characters"),
+        .min(3, "Password must be at least 3 characters"),
     })
     .required();
 
   const {
     control,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
+    defaultValues: {
+      username: "",
+      password: "",
+    },
   });
 
-  const onSubmit = (data) => {
-    router.push("/(tabs)");
-    Alert.alert("Registration Success", `Welcome, ${data.username}!`);
+  const onSubmit = ({ username, password }) => {
+    const detail = {
+      username: username,
+      password: password,
+    };
+
+    dispatch(checkUsernameThunk({ data: username.trim() })).then((data) => {
+      dispatch(checkUsernameThunk({ data: username.trim() })).then((data) => {
+        if (data.payload.data === false) {
+          dispatch(registerThunk(detail)).then((data) => {
+            if (data.payload.type === SUCCESS) {
+              router.push("/(tabs)");
+              Alert.alert("Registration Success", `Welcome, ${data.username}!`);
+            }
+          });
+          setLoginOpen(false);
+        } else {
+          setError("username", {
+            type: "manual",
+            message: "Username is already taken",
+          });
+        }
+      });
+    });
   };
   return (
     <View style={styles.container}>

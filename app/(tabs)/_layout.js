@@ -11,7 +11,8 @@ export default function Layout() {
           tabBarIcon: ({ color }) => (
             <AntDesign name="CodeSandbox" size={28} color={color} />
           ),
-          headerShown: false,
+          headerShown: true,
+          title: "Orders",
         }}
       />
       <Tabs.Screen
@@ -21,7 +22,8 @@ export default function Layout() {
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="account-box" size={28} color={color} />
           ),
-          headerShown: false,
+          headerShown: true,
+          title: "Profile",
         }}
       />
     </Tabs>
