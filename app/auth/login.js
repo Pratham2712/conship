@@ -36,6 +36,7 @@ const login = () => {
     control,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -46,13 +47,21 @@ const login = () => {
 
   const onSubmit = ({ username, password }) => {
     const detail = {
-      username: username,
+      username: username.trim(),
       password: password,
     };
     dispatch(loginThunk(detail)).then((data) => {
       if (data?.payload?.type === SUCCESS) {
-        Alert.alert("Registration Success", `Welcome, ${data.username}!`);
+        Alert.alert(
+          "Registration Success",
+          `Welcome, ${data?.payload?.data[0]?.username}!`
+        );
         router.push("(tabs)");
+      } else {
+        setError("password", {
+          type: "manual",
+          message: data?.payload?.message,
+        });
       }
     });
   };

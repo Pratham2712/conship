@@ -9,21 +9,21 @@ import { checkUserLoginThunk } from "./(redux)/authSlice";
 const Home = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  useEffect(() => {
-    const checkToken = async () => {
-      try {
-        const token = await AsyncStorage.getItem("token");
-        if (token) {
-          dispatch(checkUserLoginThunk({ token: token }));
-          router.push("(tabs)");
-        }
-      } catch (error) {
-        console.error("Error checking token:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const checkToken = async () => {
+  //     try {
+  //       const token = await AsyncStorage.getItem("token");
+  //       if (token) {
+  //         dispatch(checkUserLoginThunk({ token: token }));
+  //         router.push("(tabs)");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error checking token:", error);
+  //     }
+  //   };
 
-    checkToken();
-  }, []);
+  //   checkToken();
+  // }, []);
   return (
     <View>
       <View style={styles.container}>
@@ -33,7 +33,7 @@ const Home = () => {
           style={styles.buttonContainer}
           onPress={() => router.push("auth/register")}
         >
-          <Text style={styles.buttonText}>Register</Text>
+          <Text style={styles.buttonText}>Let's start</Text>
         </TouchableOpacity>
       </View>
     </View>

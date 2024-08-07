@@ -12,7 +12,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "expo-router/build/hooks";
 import { checkUsernameThunk, registerThunk } from "../(redux)/authSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { SUCCESS } from "../(constant)/constants";
 
 const reg = () => {
@@ -54,7 +54,7 @@ const reg = () => {
       if (data.payload.data === false) {
         dispatch(registerThunk(detail)).then((data) => {
           if (data.payload.type === SUCCESS) {
-            //router.push("/auth/login");
+            router.push("/auth/login");
           }
         });
       } else {

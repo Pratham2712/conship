@@ -22,6 +22,29 @@ export default function Layout() {
         <Stack.Screen name="auth/register" options={{ headerShown: false }} />
         <Stack.Screen name="auth/login" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="order/index" options={{ headerShown: true }} />
+        <Stack.Screen
+          name="order/more/[moreDetails]"
+          options={{
+            headerShown: true,
+            title: "Load Details",
+            headerTitleStyle: {
+              fontWeight: "bold",
+              fontSize: 24,
+            },
+          }}
+        />
+        <Stack.Screen
+          name="order/[orderId]"
+          options={{
+            headerShown: true,
+            title: "Order Details",
+            headerTitleStyle: {
+              fontWeight: "bold",
+              fontSize: 24,
+            },
+          }}
+        />
       </Stack>
     </Provider>
   );

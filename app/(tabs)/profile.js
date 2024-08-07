@@ -21,21 +21,21 @@ const profile = () => {
     (state) => state.rootReducer.authSlice.data.userInfo.username
   );
 
-  useEffect(() => {
-    const checkToken = async () => {
-      try {
-        const token = await AsyncStorage.getItem("token");
-        if (token) {
-          const data = { token: token };
-          dispatch(checkUserLoginThunk(data));
-        }
-      } catch (error) {
-        console.error("Error checking token:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const checkToken = async () => {
+  //     try {
+  //       const token = await AsyncStorage.getItem("token");
+  //       if (token) {
+  //         const data = { token: token };
+  //         dispatch(checkUserLoginThunk(data));
+  //       }
+  //     } catch (error) {
+  //       console.error("Error checking token:", error);
+  //     }
+  //   };
 
-    checkToken();
-  }, []);
+  //   checkToken();
+  // }, []);
 
   return (
     <View style={styles.container}>

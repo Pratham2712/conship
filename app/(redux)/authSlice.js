@@ -37,10 +37,8 @@ export const loginThunk = createAsyncThunk("auth/login", async (data) => {
   try {
     const res = await axios.post(`${BASE_URL}/auth/login`, data);
     if (res) {
-      console.log(res);
-
-      await AsyncStorage.setItem("token", res.token);
-      await AsyncStorage.setItem("username", res.data.data[0].username);
+      await AsyncStorage.setItem("token", res?.data?.token);
+      //await AsyncStorage.setItem("username", res?.data?.data[0]?.username);
     }
     return res.data;
   } catch (error) {
