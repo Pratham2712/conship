@@ -1,6 +1,7 @@
 import { Stack } from "expo-router/stack";
 import { Provider } from "react-redux";
 import { store } from "./(redux)/store";
+import { Text, View } from "react-native";
 
 export default function Layout() {
   return (
@@ -9,14 +10,39 @@ export default function Layout() {
         <Stack.Screen
           name="index"
           options={{
+            header: () => (
+              <View
+                style={{
+                  backgroundColor: "#fff",
+                  marginTop: 60,
+                  paddingBottom: 16,
+                  marginLeft: 30,
+                }}
+              >
+                <Text
+                  style={{
+                    color: "#333",
+                    fontSize: 35,
+                    fontWeight: "bold",
+                    borderBottomWidth: 0, // No border bottom
+                  }}
+                >
+                  OptiPack3D
+                </Text>
+              </View>
+            ),
             headerShown: true,
-            title: "Conship ->",
-            headerStyle: { backgroundColor: "#0D1117" },
-            headerTitleStyle: {
-              color: "#007BFF",
-              fontSize: 30,
-              fontWeight: "bold",
-            },
+            title: "OptiPack3D",
+            // headerStyle: {
+            //   backgroundColor: "#fff",
+            //   marginTop: 34,
+            //   borderBottomWidth: 0,
+            // },
+            // headerTitleStyle: {
+            //   color: "#333",
+            //   fontSize: 30,
+            //   fontWeight: "bold",
+            // },
           }}
         />
         <Stack.Screen name="auth/register" options={{ headerShown: false }} />

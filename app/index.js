@@ -1,6 +1,7 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect } from "react";
 import icon from "../assets/icon-image.png";
+import logo from "../assets/logo.png";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router/build/hooks";
 import { useDispatch } from "react-redux";
@@ -27,13 +28,13 @@ const Home = () => {
   return (
     <View>
       <View style={styles.container}>
-        <Image style={styles.icon} source={icon} />
+        <Image style={styles.icon} source={logo} />
         <Text style={styles.welcomeText}>Welcome</Text>
         <TouchableOpacity
           style={styles.buttonContainer}
           onPress={() => router.push("auth/register")}
         >
-          <Text style={styles.buttonText}>Let's start</Text>
+          <Text style={styles.buttonText}>Get Started</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -46,14 +47,15 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#0D1117",
+    backgroundColor: "#fff",
     height: "100%",
   },
   icon: {
-    width: 350,
+    width: 300,
     height: 300,
     marginBottom: 20,
     marginTop: 0,
+    objectFit: "contain",
   },
   welcomeText: {
     fontSize: 24,
@@ -62,7 +64,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: "80%",
-    backgroundColor: "#007BFF",
+    backgroundColor: "#000000",
     borderRadius: 5,
     overflow: "hidden",
     alignItems: "center",

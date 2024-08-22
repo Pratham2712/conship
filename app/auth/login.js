@@ -21,10 +21,10 @@ const login = () => {
 
   const schema = yup
     .object({
-      username: yup
+      email: yup
         .string()
-        .required("Username is required")
-        .min(3, "Username must be at least 3 characters"),
+        .required("Email is required")
+        .email("Email must be a valid email address"),
       password: yup
         .string()
         .required("Password is required")
@@ -40,14 +40,14 @@ const login = () => {
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   });
 
-  const onSubmit = ({ username, password }) => {
+  const onSubmit = ({ email, password }) => {
     const detail = {
-      username: username.trim(),
+      email: email,
       password: password,
     };
     dispatch(loginThunk(detail)).then((data) => {
@@ -70,22 +70,22 @@ const login = () => {
       <Text style={styles.title}>Login</Text>
       <Controller
         control={control}
-        name="username"
+        name="email"
         render={({ field: { onChange, onBlur, value } }) => (
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
-              placeholder="Username"
+              placeholder="Email"
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
             />
+            {errors.email && (
+              <Text style={styles.errorText}>{errors.email.message}</Text>
+            )}
           </View>
         )}
       />
-      {errors.username && (
-        <Text style={styles.errorText}>{errors.username.message}</Text>
-      )}
       <Controller
         control={control}
         name="password"
@@ -99,14 +99,17 @@ const login = () => {
               onChangeText={onChange}
               value={value}
             />
+            {errors.password && (
+              <Text style={styles.errorText}>{errors.password.message}</Text>
+            )}
           </View>
         )}
       />
-      {errors.password && (
-        <Text style={styles.errorText}>{errors.password.message}</Text>
-      )}
       <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
         <Text style={styles.buttonText}>Login</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => router.push("auth/login")}>
+        <Text style={styles.loginText}>forgot password?</Text>
       </TouchableOpacity>
     </View>
   );
@@ -152,7 +155,7 @@ const styles = StyleSheet.create({
   button: {
     width: "90%",
     padding: 15,
-    backgroundColor: "#007BFF",
+    backgroundColor: "#000000",
     borderRadius: 5,
     alignItems: "center",
     marginTop: 20,

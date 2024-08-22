@@ -28,6 +28,10 @@ const reg = () => {
         .string()
         .required("Password is required")
         .min(3, "Password must be at least 3 characters"),
+      email: yup
+        .string()
+        .required("Email is required")
+        .email("Email must be a valid email address"),
     })
     .required();
 
@@ -41,6 +45,7 @@ const reg = () => {
     defaultValues: {
       username: "",
       password: "",
+      email: "",
     },
   });
 
@@ -70,6 +75,24 @@ const reg = () => {
       <Text style={styles.title}>Register</Text>
       <Controller
         control={control}
+        name="email"
+        render={({ field: { onChange, onBlur, value } }) => (
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+            />
+            {errors.email && (
+              <Text style={styles.errorText}>{errors.email.message}</Text>
+            )}
+          </View>
+        )}
+      />
+      <Controller
+        control={control}
         name="username"
         render={({ field: { onChange, onBlur, value } }) => (
           <View style={styles.inputContainer}>
@@ -80,12 +103,12 @@ const reg = () => {
               onChangeText={onChange}
               value={value}
             />
+            {errors.username && (
+              <Text style={styles.errorText}>{errors.username.message}</Text>
+            )}
           </View>
         )}
       />
-      {errors.username && (
-        <Text style={styles.errorText}>{errors.username.message}</Text>
-      )}
       <Controller
         control={control}
         name="password"
@@ -99,12 +122,12 @@ const reg = () => {
               onChangeText={onChange}
               value={value}
             />
+            {errors.password && (
+              <Text style={styles.errorText}>{errors.password.message}</Text>
+            )}
           </View>
         )}
       />
-      {errors.password && (
-        <Text style={styles.errorText}>{errors.password.message}</Text>
-      )}
       <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
@@ -134,7 +157,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: "100%",
-    marginBottom: 10,
+    marginBottom: 20,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -149,14 +172,14 @@ const styles = StyleSheet.create({
   errorText: {
     color: "red",
     fontSize: 12,
-    marginBottom: 5,
+    marginTop: 3,
     alignSelf: "flex-start",
     marginLeft: 18,
   },
   button: {
     width: "90%",
     padding: 15,
-    backgroundColor: "#007BFF",
+    backgroundColor: "#000000",
     borderRadius: 5,
     alignItems: "center",
     marginTop: 20,
