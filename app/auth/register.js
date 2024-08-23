@@ -11,7 +11,7 @@ import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "expo-router/build/hooks";
-import { checkUsernameThunk, registerThunk } from "../(redux)/authSlice";
+import { checkEmailThunk, checkUsernameThunk, registerThunk } from "../(redux)/authSlice";
 import { useDispatch } from "react-redux";
 import { SUCCESS } from "../(constant)/constants";
 
@@ -49,26 +49,39 @@ const reg = () => {
     },
   });
 
-  const onSubmit = ({ username, password }) => {
+  const onSubmit = ({ username,email, password }) => {
     const detail = {
       username: username,
       password: password,
+      email:email
     };
 
-    dispatch(checkUsernameThunk({ data: username.trim() })).then((data) => {
-      if (data.payload.data === false) {
-        dispatch(registerThunk(detail)).then((data) => {
-          if (data.payload.type === SUCCESS) {
-            router.push("/auth/login");
-          }
+    dispatch(checkEmailThunk({data:email.trim()})).then((data) => {
+      if(data?.payload?.data === false){
+        dispatch(checkUsernameThunk({ data: username.trim() })).then((data) => {
+          if (data?.payload?.data === false) {
+            dispatch(registerThunk(detail)).then((data) => {
+              if (data.payload.type === SUCCESS) {
+                router.push("/auth/login");
+              }
+            });
+          } else {
+            setError("username", {
+              type: "manual",
+              message: "Username is already taken",
+            });
+          }      
         });
+
       } else {
-        setError("username", {
+        setError("email", {
           type: "manual",
-          message: "Username is already taken",
+          message: "Email is already registered",
         });
       }
-    });
+      
+    })
+
   };
   return (
     <View style={styles.container}>

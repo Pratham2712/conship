@@ -16,7 +16,19 @@ export const checkUsernameThunk = createAsyncThunk(
   "/auth/checkUser",
   async (data) => {
     try {
+      
       const res = await axios.post(`${BASE_URL}/auth/checkUser`, data);
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+);
+export const checkEmailThunk = createAsyncThunk(
+  "/auth/checkEmail",
+  async (data) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/auth/checkEmail`, data);
       return res.data;
     } catch (error) {
       return error.response.data;
@@ -80,6 +92,7 @@ const initialState = {
     registerThunk: IDLE,
     checkUsernameThunk: IDLE,
     checkUserLoginThunk: IDLE,
+    checkEmailThunk:IDLE,
   },
 };
 
@@ -106,7 +119,7 @@ const authSlice = createSlice({
       })
       .addCase(checkUsernameThunk.fulfilled, (state, { payload }) => {
         switch (payload.type) {
-          case FAILURE:
+          case FAILURE:            
             state.data.userExist = payload.data;
             state.loading = false;
             state.status.checkUsernameThunk = FULFILLED;
@@ -131,6 +144,46 @@ const authSlice = createSlice({
             break;
         }
       })
+      .addCase(checkUsernameThunk.rejected, (state, action) => {
+        state.status.checkUsernameThunk = ERROR;
+        state.loading = false;
+        state.errorData = action.error.message;
+      })
+      //checkEmailThunk============================================================================================================
+      .addCase(checkEmailThunk.pending, (state, { payload }) => {
+        state.loading = true;
+      })
+      .addCase(checkEmailThunk.fulfilled, (state, { payload }) => {
+        switch (payload.type) {
+          case FAILURE:            
+            state.data.userExist = payload.data;
+            state.loading = false;
+            state.status.checkEmailThunk = FULFILLED;
+            state.errorData = {
+              message: payload.message,
+              type: payload.type,
+              errors: payload.errors,
+            };
+            break;
+          case SUCCESS:
+            state.data.userExist = payload.data;
+            state.loading = false;
+            state.status.checkEmailThunk = FULFILLED;
+          default:
+            //state.isError = true;
+            state.loading = false;
+            state.errorData = {
+              message: payload.message,
+              type: payload.type,
+              errors: payload.errors,
+            };
+            break;
+        }
+      })      .addCase(checkEmailThunk.rejected, (state, action) => {
+        state.status.checkEmailThunk = ERROR;
+        state.loading = false;
+        state.errorData = action.error.message;
+      })
       //registerThunk==============================================================================================================
       .addCase(registerThunk.pending, (state, { payload }) => {
         state.loading = true;
@@ -138,7 +191,6 @@ const authSlice = createSlice({
       .addCase(registerThunk.fulfilled, (state, { payload }) => {
         switch (payload.type) {
           case SUCCESS:
-            console.log(payload);
             state.data.userInfo = payload.data[0];
             state.loading = false;
             state.isLogin = true;
